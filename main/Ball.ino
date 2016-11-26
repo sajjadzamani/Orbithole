@@ -1,8 +1,8 @@
 /*Keep this for now
- * Roll angle:
+* Roll angle:
 double getRoll( float Ax, float Az){
 
-  return atan(-Ax/Az)*(180/3.14);
+return atan(-Ax/Az)*(180/3.14);
 }*/
 struct floatVector *GetSpeed(){
   if(marblePosition.x > 124 || marblePosition.x < 0 || marblePosition.y > 28 || marblePosition.y < 0){
@@ -27,9 +27,9 @@ struct floatVector *GetSpeed(){
         marbleSpeed.x -= Ax * PERIOD_S * MAX_MARBLE_ACC;
     }
   }
-    else{
-  marbleSpeed.x -= Ax * PERIOD_S * MAX_MARBLE_ACC;
-  marbleSpeed.y += Ay*PERIOD_S * MAX_MARBLE_ACC;
+  else{
+    marbleSpeed.x -= Ax * PERIOD_S * MAX_MARBLE_ACC;
+    marbleSpeed.y += Ay*PERIOD_S * MAX_MARBLE_ACC;
   }
   return marbleSpeed;
 }
@@ -38,31 +38,31 @@ struct intVector *GetPosition(){
   marblePosition.x+=(int)((marbleSpeed.x)*PERIOD_S);
   marblePosition.y+=(int)((marbleSpeed.y)*PERIOD_S);
   Serial.println(marblePosition.x);
-    return marblePosition;
+  return marblePosition;
 }
 void DrawBall(){
   OrbitOledClearBuffer();
   for(int i=marblePosition.x;i<=(marblePosition.x+3);i++){
     if(i==marblePosition.x || i==marblePosition.x+3){
-        OrbitOledMoveTo(i,marblePosition.y+1);
-        OrbitOledDrawPixel();
-        OrbitOledMoveTo(i,marblePosition.y+2);
-        OrbitOledDrawPixel();
-    }else {
+      OrbitOledMoveTo(i,marblePosition.y+1);
+      OrbitOledDrawPixel();
+      OrbitOledMoveTo(i,marblePosition.y+2);
+      OrbitOledDrawPixel();
+    }
+    else {
       OrbitOledMoveTo(i,marblePosition.y);
       OrbitOledDrawPixel();
       OrbitOledMoveTo(i, marblePosition.y+3);
       OrbitOledDrawPixel();
     }
   }
-    OrbitOledUpdate();
+  OrbitOledUpdate();
 }
 
 /* ClearBall
- *  Clears the last position of the marble by filling the positoins with a blank rectangle
- */
+*  Clears the last position of the marble by filling the positoins with a blank rectangle
+*/
 void ClearBall(){
-
   OrbitOledMoveTo(marblePosition.x+1,marblePosition.y);
   OrbitOledSetFillPattern(OrbitOledGetStdPattern(iptnBlank));
   OrbitOledSetDrawMode(modOledSet);
@@ -71,7 +71,6 @@ void ClearBall(){
   OrbitOledFillRect(marblePosition.x+3,marblePosition.y+2);
   OrbitOledUpdate();
 }
-
 
 void MoveBall(){
   Move();
