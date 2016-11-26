@@ -1,8 +1,8 @@
 #define PERIOD_MS 40
 #define PERIOD_S 40.0/1000.0
-#define PX_M_RATIO 400.0/1.5
 #define REBOUND_FACTR 0.2f
 #define MAX_MARBLE_ACC 50
+#define INSTANT_ACCEL_COEF 0.2f
 #include <math.h>
 struct floatVector{
   double x;
@@ -12,6 +12,7 @@ struct intVector{
   int x;
   int y;
 };
-struct intVector marblePosition = {.x = 1, .y = 1};
+struct floatVector marblePosition = {.x = 1, .y = 1};
 struct floatVector marbleSpeed = {.x = 0, .y = 0};
 extern char    rgbOledBmp[];
+struct floatVector accel = {0};

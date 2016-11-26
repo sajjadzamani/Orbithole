@@ -1,9 +1,8 @@
-#include "stdlib.h"
-#include "time.h"
+#include <stdlib.h>
 void marble_start(void){
-    time_t t;
-  srand((unsigned) time(&t));
-  int pathPoints[8 + rand() % 2][2];
+    //time_t t;
+ // srand((unsigned) time(&t));
+  /*int pathPoints[8 + rand() % 2][2];
   pathPoints[0][0] = 4;
   pathPoints[0][1] = ychOledMax - 4;
   for(int k = 1; k < sizeof(pathPoints)/sizeof(int); k++){
@@ -19,6 +18,6 @@ void marble_start(void){
   for(int i = 0; i < sizeof(pathPoints)/sizeof(pathPoints[0]); i++){
     OrbitOledMoveTo(pathPoints[i][0],pathPoints[i][1]);
     OrbitOledLineTo(pathPoints[i][2],pathPoints[i][3]);
-  }
-  DrawBall();
+  }*/
+  MoveBall();
 }

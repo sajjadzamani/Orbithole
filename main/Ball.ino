@@ -1,58 +1,56 @@
 /*Keep this for now
 * Roll angle:
-double getRoll( float Ax, float Az){
+double getRoll( float accel.x, float Az){
 
-return atan(-Ax/Az)*(180/3.14);
+return atan(-accel.x/Az)*(180/3.14);
 }*/
-struct floatVector *GetSpeed(){
+struct floatVector GetSpeed(){
   if(marblePosition.x > 124 || marblePosition.x < 0 || marblePosition.y > 28 || marblePosition.y < 0){
     if(marblePosition.x > 124 || marblePosition.x < 0){
-      marbleSpeed.x *= (fabs(marbleSpeed.x) < 1) ? 0 : -REBOUND_FACTR;
+      marbleSpeed.x *= -REBOUND_FACTR;
       marblePosition.x = (marblePosition.x >= 124) ? 124 : 0;
       if(marblePosition.y > 28 || marblePosition.y < 0){
-        marbleSpeed.y *= (fabs(marbleSpeed.y) < 1) ? 0 : -REBOUND_FACTR;
+        marbleSpeed.y *= -REBOUND_FACTR;
         marblePosition.y = (marblePosition.y >= 28) ? 28 : 0;
       }
       else
-        marbleSpeed.y += Ay * PERIOD_S * MAX_MARBLE_ACC / 9.8;
+        marbleSpeed.y += accel.y * PERIOD_S * MAX_MARBLE_ACC;
     }
     if(marblePosition.y > 28 || marblePosition.y < 0){
-      marbleSpeed.y *= (fabs(marbleSpeed.y) < 1) ? 0 : -REBOUND_FACTR;
+      marbleSpeed.y *= -REBOUND_FACTR;
       marblePosition.y = (marblePosition.y >= 28) ? 28 : 0;
       if(marblePosition.x > 124 || marblePosition.x < 0){
-        marbleSpeed.x *= (fabs(marbleSpeed.x) < 1) ? 0 : -REBOUND_FACTR;
+        marbleSpeed.x *= -REBOUND_FACTR;
         marblePosition.x = (marblePosition.x >= 124) ? 124 : 0;
       }
       else
-        marbleSpeed.x -= Ax * PERIOD_S * MAX_MARBLE_ACC;
+        marbleSpeed.x -= accel.x * PERIOD_S * MAX_MARBLE_ACC;
     }
   }
   else{
-    marbleSpeed.x -= Ax * PERIOD_S * MAX_MARBLE_ACC;
-    marbleSpeed.y += Ay*PERIOD_S * MAX_MARBLE_ACC;
+    marbleSpeed.x -= accel.x * PERIOD_S * MAX_MARBLE_ACC;
+    marbleSpeed.y += accel.y * PERIOD_S * MAX_MARBLE_ACC;
   }
   return marbleSpeed;
 }
 
-struct intVector *GetPosition(){
-  marblePosition.x+=(int)((marbleSpeed.x)*PERIOD_S);
-  marblePosition.y+=(int)((marbleSpeed.y)*PERIOD_S);
-  Serial.println(marblePosition.x);
+struct floatVector GetPosition(){
+  marblePosition.x += (1 - INSTANT_ACCEL_COEF) * marbleSpeed.x * PERIOD_S - INSTANT_ACCEL_COEF * MAX_MARBLE_ACC * PERIOD_S * accel.x;
+  marblePosition.y += (1 - INSTANT_ACCEL_COEF) * marbleSpeed.y * PERIOD_S + INSTANT_ACCEL_COEF * MAX_MARBLE_ACC * PERIOD_S * accel.y;
   return marblePosition;
 }
 void DrawBall(){
-  OrbitOledClearBuffer();
-  for(int i=marblePosition.x;i<=(marblePosition.x+3);i++){
-    if(i==marblePosition.x || i==marblePosition.x+3){
-      OrbitOledMoveTo(i,marblePosition.y+1);
+  for(int i= (int) marblePosition.x;i<=((int)marblePosition.x+3);i++){
+    if(i==(int)marblePosition.x || i==(int)marblePosition.x+3){
+      OrbitOledMoveTo(i,(int)marblePosition.y+1);
       OrbitOledDrawPixel();
-      OrbitOledMoveTo(i,marblePosition.y+2);
+      OrbitOledMoveTo(i,(int)marblePosition.y+2);
       OrbitOledDrawPixel();
     }
     else {
-      OrbitOledMoveTo(i,marblePosition.y);
+      OrbitOledMoveTo(i,(int)marblePosition.y);
       OrbitOledDrawPixel();
-      OrbitOledMoveTo(i, marblePosition.y+3);
+      OrbitOledMoveTo(i, (int)marblePosition.y+3);
       OrbitOledDrawPixel();
     }
   }
@@ -69,13 +67,13 @@ void ClearBall(){
   OrbitOledFillRect(marblePosition.x+2,marblePosition.y+3);
   OrbitOledMoveTo(marblePosition.x,marblePosition.y+1);
   OrbitOledFillRect(marblePosition.x+3,marblePosition.y+2);
-  OrbitOledUpdate();
 }
 
 void MoveBall(){
-  Move();
+  ClearBall();
+  getAccel();
   GetSpeed();
   GetPosition();
-  ClearBall();
+  Serial.println(marblePosition.x);
   DrawBall();
 }
