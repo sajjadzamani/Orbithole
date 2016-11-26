@@ -5,7 +5,7 @@ void menu_start(void){
   case 0:
     //OrbitOledSetCursor((xchOledMax - (int)(sizeof("OrbitHole")) - 1) / 2, ychOledMax / 3); // Centers the title
     //OrbitOledPutString("OrbitHole");
-    OrbitOledSetCursor(i++, ychOledMax); // Centers the subtitle
+    //OrbitOledSetCursor(i++, ychOledMax); // Centers the subtitle
     for(int j = 0; j < 16; j++)
      // OrbitOledPutChar(*(instr + k));
     break;

@@ -6,43 +6,42 @@
 #include <OrbitOledChar.h>
 #include <OrbitOledGrph.h>
 #include "Ball.h"
-
 void marble_start(void);
-  void Move();
-  void MoveInit();
-  void MoveBall();
-  void WireInit();
-  extern int    ychOledMax;
-  extern int    xchOledMax;
-  uint16_t xi;
-  uint16_t yi;
-  uint16_t zi;
-  float Ax, Ay, Az;
-  int gameState = 0;
-  // Defines the state of the game
-  // 0: main menu
-  // 1: marble start
-  // 2: marble death
-  // 3: marble win
-  // 4: ship start
-  // 5: ship death
-  // 6: ship win
-  int selector = 0;
-  // Defines which game is selected
-  // 0: marble
-  // 100: ship
-  int i = 0;
+void getAccel(void);
+void accelerometerInit(void);
+void MoveBall(void);
+void WireInit(void);
+extern int ychOledMax;
+extern int xchOledMax;
+int gameState = 1;
+
+/*
+Defines the state of the game
+ 0: main menu
+ 1: marble start
+ 2: marble death
+ 3: marble win
+ 4: ship start
+ 5: ship death
+ 6: ship win
+ */
+int selector = 0;
+/*
+ Defines which game is selected
+0: OrbitHole
+100: EndorHunt
+*/
 void setup() {
   OrbitOledInit();
   WireInit();
-  MoveInit();
+  accelerometerInit();
   Serial.begin(9600);
 }
 
 void drawCanvas(void){
   switch(gameState){
   case 0:
-    //menu_start();
+    menu_start();
     break;
   case 1:
     marble_start();
@@ -62,16 +61,13 @@ void drawCanvas(void){
   case 6:
     // TODO: Win animation
     break;
-}
-
-OrbitOledUpdate();
+  }
+  OrbitOledUpdate();
 }
 
 
 
 void loop() {
- MoveBall();
- delay(40);
  drawCanvas();
- delay(PERIOD_S);
+ delay(PERIOD_MS);
 }
