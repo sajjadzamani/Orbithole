@@ -1,4 +1,3 @@
-
 #include <delay.h>
 #include <FillPat.h>
 #include <LaunchPad.h>
@@ -6,9 +5,8 @@
 #include <OrbitOled.h>
 #include <OrbitOledChar.h>
 #include <OrbitOledGrph.h>
-
 #include "Ball.h"
-void marble_init(void);
+void marble_start(void);
 
   void Move();
   void MoveInit();
@@ -40,7 +38,7 @@ void setup() {
   MoveInit();
   Serial.begin(9600);
 }
-/*
+
 void drawCanvas(void){
   switch(gameState){
   case 0:
@@ -65,25 +63,15 @@ void drawCanvas(void){
     // TODO: Win animation
     break;
 }
-<<<<<<< .mine
+
 OrbitOledUpdate();
 }
-||||||| .r2325
-}
-=======
-}*/
->>>>>>> .r2523
+
+
 
 void loop() {
  MoveBall();
  delay(40);
-// drawCanvas();
- // TODO: BTNs, Accelerometer
-<<<<<<< .mine
+ drawCanvas();
  delay(PERIOD_S);
-||||||| .r2325
- delay(40);
-=======
-
->>>>>>> .r2523
 }
