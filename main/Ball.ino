@@ -1,124 +1,80 @@
-#include <delay.h>
-#include <FillPat.h>
-#include <LaunchPad.h>
-#include <OrbitBoosterPackDefs.h>
-#include <OrbitOled.h>
-#include <OrbitOledChar.h>
-#include <OrbitOledGrph.h>
-#include <math.h>
-
-#define FRAME_TIME 0.04f
-#define REBOUND_FACTR 0.2f
-#define MAX_MARBLE_ACC 50
-
-struct speed{
-float x;
-float y;
-};
-
-struct position{
-  int x;
-  int y;
-};
-
-struct position curPosition = (struct position){.x = 1, .y = 1};
-
-struct speed curSpeed = (struct speed){0};
-extern char    rgbOledBmp[];
-
 /*Keep this for now
- * Roll angle:
-double getRoll( float Ax, float Az){
-  
-  return atan(-Ax/Az)*(180/3.14);
+* Roll angle:
+double getRoll( float accel.x, float Az){
+
+return atan(-accel.x/Az)*(180/3.14);
 }*/
-
-
-struct speed GetSpeed(){
-  if(curPosition.x > 124 || curPosition.x < 0 || curPosition.y > 28 || curPosition.y < 0){
-    if(curPosition.x > 124 || curPosition.x < 0){
-      curSpeed.x *= (fabs(curSpeed.x) < 1) ? 0 : -REBOUND_FACTR;
-      curPosition.x = (curPosition.x >= 124) ? 124 : 0;
-      if(curPosition.y > 28 || curPosition.y < 0){
-        curSpeed.y *= (fabs(curSpeed.y) < 1) ? 0 : -REBOUND_FACTR;
-        curPosition.y = (curPosition.y >= 28) ? 28 : 0;
+struct floatVector GetSpeed(){
+  if(marblePosition.x > 124 || marblePosition.x < 0 || marblePosition.y > 28 || marblePosition.y < 0){
+    if(marblePosition.x > 124 || marblePosition.x < 0){
+      marbleSpeed.x *= -REBOUND_FACTR;
+      marblePosition.x = (marblePosition.x >= 124) ? 124 : 0;
+      if(marblePosition.y > 28 || marblePosition.y < 0){
+        marbleSpeed.y *= -REBOUND_FACTR;
+        marblePosition.y = (marblePosition.y >= 28) ? 28 : 0;
       }
       else
-        curSpeed.y += Ay * FRAME_TIME * MAX_MARBLE_ACC / 9.8;
-    }  
-    if(curPosition.y > 28 || curPosition.y < 0){
-      curSpeed.y *= (fabs(curSpeed.y) < 1) ? 0 : -REBOUND_FACTR;
-      curPosition.y = (curPosition.y >= 28) ? 28 : 0;
-      if(curPosition.x > 124 || curPosition.x < 0){
-        curSpeed.x *= (fabs(curSpeed.x) < 1) ? 0 : -REBOUND_FACTR;
-        curPosition.x = (curPosition.x >= 124) ? 124 : 0;
+        marbleSpeed.y += accel.y * PERIOD_S * MAX_MARBLE_ACC;
+    }
+    if(marblePosition.y > 28 || marblePosition.y < 0){
+      marbleSpeed.y *= -REBOUND_FACTR;
+      marblePosition.y = (marblePosition.y >= 28) ? 28 : 0;
+      if(marblePosition.x > 124 || marblePosition.x < 0){
+        marbleSpeed.x *= -REBOUND_FACTR;
+        marblePosition.x = (marblePosition.x >= 124) ? 124 : 0;
       }
       else
-        curSpeed.x -= Ax * FRAME_TIME * MAX_MARBLE_ACC;
+        marbleSpeed.x -= accel.x * PERIOD_S * MAX_MARBLE_ACC;
     }
   }
-    else{
-  curSpeed.x -= Ax * FRAME_TIME * MAX_MARBLE_ACC;
-  curSpeed.y += Ay*FRAME_TIME * MAX_MARBLE_ACC;
+  else{
+    marbleSpeed.x -= accel.x * PERIOD_S * MAX_MARBLE_ACC;
+    marbleSpeed.y += accel.y * PERIOD_S * MAX_MARBLE_ACC;
   }
-  return curSpeed;
+  return marbleSpeed;
 }
-   
-struct position GetPosition(){
-  curPosition.x+=(int)((curSpeed.x)*FRAME_TIME);
-  curPosition.y+=(int)((curSpeed.y)*FRAME_TIME);
-  Serial.println(curPosition.x);
-  
-  /* Serial.print("Ax:");
-  Serial.println(factor_x);
-   Serial.print("   ");
-  Serial.print("Ay:");
-  Serial.println(factor_y);
-   Serial.print("\n");*/
-  return curPosition;
- /*Serial.print("Xpos");
-  Serial.println(xPos);
-  Serial.print("ypos");
-  Serial.println(yPos);*/
-  
+
+struct floatVector GetPosition(){
+  marblePosition.x += (1 - INSTANT_ACCEL_COEF) * marbleSpeed.x * PERIOD_S - INSTANT_ACCEL_COEF * MAX_MARBLE_ACC * PERIOD_S * accel.x;
+  marblePosition.y += (1 - INSTANT_ACCEL_COEF) * marbleSpeed.y * PERIOD_S + INSTANT_ACCEL_COEF * MAX_MARBLE_ACC * PERIOD_S * accel.y;
+  return marblePosition;
 }
 void DrawBall(){
-  OrbitOledClearBuffer();
-  for(int i=curPosition.x;i<=(curPosition.x+3);i++){
-    if(i==curPosition.x || i==curPosition.x+3){
-        OrbitOledMoveTo(i,curPosition.y+1);
-        OrbitOledDrawPixel();
-        OrbitOledMoveTo(i,curPosition.y+2);
-        OrbitOledDrawPixel();
-    }else {
-      OrbitOledMoveTo(i,curPosition.y);
+  for(int i= (int) marblePosition.x;i<=((int)marblePosition.x+3);i++){
+    if(i==(int)marblePosition.x || i==(int)marblePosition.x+3){
+      OrbitOledMoveTo(i,(int)marblePosition.y+1);
       OrbitOledDrawPixel();
-      OrbitOledMoveTo(i, curPosition.y+3);
+      OrbitOledMoveTo(i,(int)marblePosition.y+2);
+      OrbitOledDrawPixel();
+    }
+    else {
+      OrbitOledMoveTo(i,(int)marblePosition.y);
+      OrbitOledDrawPixel();
+      OrbitOledMoveTo(i, (int)marblePosition.y+3);
       OrbitOledDrawPixel();
     }
   }
-    OrbitOledUpdate();   
+  OrbitOledUpdate();
 }
 
 /* ClearBall
- *  Clears the last position of the marble by filling the positoins with a blank rectangle
- */
-void ClearBall(){       
- 
-  OrbitOledMoveTo(curPosition.x+1,curPosition.y);
+*  Clears the last position of the marble by filling the positoins with a blank rectangle
+*/
+void ClearBall(){
+  OrbitOledMoveTo(marblePosition.x+1,marblePosition.y);
   OrbitOledSetFillPattern(OrbitOledGetStdPattern(iptnBlank));
   OrbitOledSetDrawMode(modOledSet);
-  OrbitOledFillRect(curPosition.x+2,curPosition.y+3);
-  OrbitOledMoveTo(curPosition.x,curPosition.y+1);
-  OrbitOledFillRect(curPosition.x+3,curPosition.y+2);
-  OrbitOledUpdate();
+  OrbitOledFillRect(marblePosition.x+2,marblePosition.y+3);
+  OrbitOledMoveTo(marblePosition.x,marblePosition.y+1);
+  OrbitOledFillRect(marblePosition.x+3,marblePosition.y+2);
 }
 
 void MoveBall(){
   ClearBall();
-  Move();
+  getAccel();
   GetSpeed();
   GetPosition();
+  Serial.println(marblePosition.x);
   DrawBall();
 }
 
