@@ -4,7 +4,14 @@
 #define REBOUND_FACTR 0.2f
 #define MAX_MARBLE_ACC 50
 #include <math.h>
-int marblePosition[] = {1, 1};
-double marbleSpeed[] = {1, 1};
+struct floatVector{
+  double x;
+  double y;
+};
+struct intVector{
+  int x;
+  int y;
+};
+struct intVector marblePosition = {.x = 1, .y = 1};
+struct floatVector marbleSpeed = {.x = 0, .y = 0};
 extern char    rgbOledBmp[];
-
