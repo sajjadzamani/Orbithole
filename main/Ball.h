@@ -3,8 +3,7 @@
 #define REBOUND_FACTR 0.6f
 #define MAX_MARBLE_ACC 50
 #define INSTANT_ACCEL_COEF 0.2f
-#define MAX_X_SCREEN 128
-#define MAX_Y_SCREEN 32
+#define NUM_OF_GAMES 2
 #include <math.h>
 struct floatVector{
   double x;
