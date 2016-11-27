@@ -1,23 +1,27 @@
 #include <stdlib.h>
 void marble_start(void){
-    //time_t t;
- // srand((unsigned) time(&t));
-  /*int pathPoints[8 + rand() % 2][2];
-  pathPoints[0][0] = 4;
-  pathPoints[0][1] = ychOledMax - 4;
-  for(int k = 1; k < sizeof(pathPoints)/sizeof(int); k++){
-    if(rand() % 2){
-      pathPoints[k][0] = pathPoints[k - 1][0];
-      pathPoints[k][1] = pathPoints[k - 1][1] + rand() % (ychOledMax - pathPoints[k - 1][1] - 2);
-    }
-    else{
-      pathPoints[k][1] = pathPoints[k - 1][1];
-      pathPoints[k][0] = pathPoints[k - 1][0] + rand() % (xchOledMax - pathPoints[k - 1][0] - 2);
-    }
-  }
-  for(int i = 0; i < sizeof(pathPoints)/sizeof(pathPoints[0]); i++){
-    OrbitOledMoveTo(pathPoints[i][0],pathPoints[i][1]);
-    OrbitOledLineTo(pathPoints[i][2],pathPoints[i][3]);
-  }*/
   MoveBall();
 }
+void marble_init(void){
+  srand(time(NULL));
+  
+  struct intVector pathPoints[8 + rand() % 2];
+  pathPoints[0].x = marblePosition.x;
+  pathPoints[0].y = marblePosition.y; 
+  for(int k = 1; k < sizeof(pathPoints)/sizeof(struct intVector); k++){
+    if(rand() % 2){
+      pathPoints[k].x = pathPoints[k - 1].x;
+      pathPoints[k].y = pathPoints[k - 1].y + rand() % (crowOledMax - pathPoints[k - 1].y - 2);
+    }
+    else{
+      pathPoints[k].y = pathPoints[k - 1].y;
+      pathPoints[k].x = pathPoints[k - 1].x + rand() % (ccolOledMax - pathPoints[k - 1].x - 2);
+    }
+  }
+  for(int i = 0; i < sizeof(pathPoints)/sizeof(struct intVector) - 1; i++){
+    OrbitOledMoveTo(pathPoints[i].x,pathPoints[i].y);
+    OrbitOledLineTo(pathPoints[i + 1].x,pathPoints[i + 1].y);
+  }
+  initGame = true;
+}
+

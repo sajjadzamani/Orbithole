@@ -21,16 +21,20 @@ Defines the state of the game
  1: marble start
  2: marble death
  3: marble win
- 4: ship start
+ 4: ship st art
  5: ship death
  6: ship win
  */
 int selector = 0;
 /*
  Defines which game is selected
-0: OrbitHole
-100: EndorHunt
+0 * 128: OrbitHole
+1 * 128: EndorHunt
+Any other game we could add...
+N * 128: Game N
 */
+bool initGame = false;
+
 void setup() {
   OrbitOledInit();
   WireInit();
@@ -42,9 +46,13 @@ void drawCanvas(void){
   switch(gameState){
   case 0:
     menu_start();
+    if(!initGame)
+      menu_init();
     break;
   case 1:
     marble_start();
+    if(!initGame)
+      marble_init();
     break;
   case 2:
     // TODO: Death animation

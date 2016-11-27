@@ -63,10 +63,11 @@ void DrawBall(){
 void ClearBall(){
   OrbitOledSetFillPattern(OrbitOledGetStdPattern(iptnBlank));
   OrbitOledSetDrawMode(modOledSet);
-  OrbitOledMoveTo((int)marblePosition.x+1, (int)marblePosition.y);
-  OrbitOledFillRect((int)marblePosition.x+2, (int)marblePosition.y+3);
+  OrbitOledMoveTo((int)marblePosition.x + 1, (int)marblePosition.y);
+  OrbitOledFillRect((int)marblePosition.x + 2, (int)marblePosition.y+3);
   OrbitOledMoveTo((int)marblePosition.x, (int)marblePosition.y+1);
-  OrbitOledFillRect((int)marblePosition.x+3, (int)marblePosition.y+2);
+  OrbitOledFillRect((int)marblePosition.x + 3, (int)marblePosition.y+2);
+
 }
 
 void MoveBall(){
