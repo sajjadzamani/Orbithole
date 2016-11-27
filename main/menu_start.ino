@@ -1,4 +1,3 @@
-
 void menu_start(void){
   //char *instr[] = "Press BTN1 to start";
   switch(selector){
