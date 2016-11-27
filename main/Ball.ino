@@ -61,12 +61,12 @@ void DrawBall(){
 *  Clears the last position of the marble by filling the positoins with a blank rectangle
 */
 void ClearBall(){
-  OrbitOledMoveTo(marblePosition.x+1,marblePosition.y);
+  OrbitOledMoveTo((int)marblePosition.x + 1,(int) marblePosition.y);
   OrbitOledSetFillPattern(OrbitOledGetStdPattern(iptnBlank));
   OrbitOledSetDrawMode(modOledSet);
-  OrbitOledFillRect(marblePosition.x+2,marblePosition.y+3);
-  OrbitOledMoveTo(marblePosition.x,marblePosition.y+1);
-  OrbitOledFillRect(marblePosition.x+3,marblePosition.y+2);
+  OrbitOledFillRect((int) marblePosition.x + 2,(int) marblePosition.y + 3);
+  OrbitOledMoveTo((int) marblePosition.x,(int) marblePosition.y + 1);
+  OrbitOledFillRect((int) marblePosition.x + 3,(int) marblePosition.y + 2);
 }
 
 void MoveBall(){

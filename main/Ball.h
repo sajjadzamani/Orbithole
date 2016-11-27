@@ -1,8 +1,10 @@
 #define PERIOD_MS 40
 #define PERIOD_S 40.0/1000.0
-#define REBOUND_FACTR 0.2f
+#define REBOUND_FACTR 0.6f
 #define MAX_MARBLE_ACC 50
 #define INSTANT_ACCEL_COEF 0.2f
+#define MAX_X_SCREEN 128
+#define MAX_Y_SCREEN 32
 #include <math.h>
 struct floatVector{
   double x;
