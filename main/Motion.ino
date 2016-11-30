@@ -1,4 +1,5 @@
 #include <Wire.h>
+
 uint16_t xi;
 uint16_t yi;
 uint16_t zi;
@@ -33,8 +34,17 @@ void getAccel(void)
   uint16_t zi = (data[5] << 8) | data[4];
   accel.x = (double)(*(int16_t*)(&xi) / SensorMaximumReading * SensorMaximumAccel);
   accel.y = (double)(*(int16_t*)(&yi) / SensorMaximumReading * SensorMaximumAccel);
-  double z = (double)(*(int16_t*)(&yi) / SensorMaximumReading * SensorMaximumAccel);
-  double norm = sqrt((z * z + accel.x * accel.x + accel.y * accel.y));
+  accel.z = (double)(*(int16_t*)(&zi) / SensorMaximumReading * SensorMaximumAccel);
+  double norm = sqrt((accel.z * accel.z + accel.x * accel.x + accel.y * accel.y));
   accel.x /= norm;
   accel.y /= norm;
+  accel.z /= norm;
+}
+
+double pitch(){
+  return atan2(-accel.x,accel.z)*(180.0/M_PI);
+}
+
+double roll(){
+  return atan2(accel.y,(sqrt(accel.x*accel.x+accel.z*accel.z))) * (180.0/M_PI);
 }

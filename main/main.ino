@@ -6,14 +6,21 @@
 #include <OrbitOledChar.h>
 #include <OrbitOledGrph.h>
 #include "Ball.h"
+
 void marble_start(void);
 void getAccel(void);
 void accelerometerInit(void);
 void MoveBall(void);
 void WireInit(void);
+void moveCursor(int coloumn, int row, int game);
+void putString(char *ch);
+void menuStart();
+void menuInit();
+
+const uint32_t Buttons[2] = { PD_2, PE_0 };
 extern int ychOledMax;
 extern int xchOledMax;
-int gameState = 1;
+int gameState = 0;
 
 /*
 Defines the state of the game
@@ -25,23 +32,16 @@ Defines the state of the game
  5: ship death
  6: ship win
  */
-int selector = 0;
-/*
- Defines which game is selected
-0 * 128: OrbitHole
-1 * 128: EndorHunt
-Any other game we could add...
-N * 128: Game N
-*/
-bool initGame = false;
 
 void setup() {
   OrbitOledInit();
   WireInit();
   accelerometerInit();
+  menuInit();
   Serial.begin(9600);
 }
 
+/*
 void drawCanvas(void){
   switch(gameState){
   case 0:
@@ -72,10 +72,11 @@ void drawCanvas(void){
   }
   OrbitOledUpdate();
 }
-
+*/
 
 
 void loop() {
- drawCanvas();
+ menuStart(); 
+// drawCanvas();
  delay(PERIOD_MS);
 }
