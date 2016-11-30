@@ -11,8 +11,6 @@ void getAccel(void);
 void accelerometerInit(void);
 void MoveBall(void);
 void WireInit(void);
-extern int ychOledMax;
-extern int xchOledMax;
 int gameState = 1;
 
 /*
